@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/plugin_inputtextfieldview_parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom"
+    android:background="@android:color/transparent"
+    android:gravity="bottom"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/plugin_inputtextfieldview_input_layout_height"
+        layout="@layout/plugin_inputtextfieldview_input_layout" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:id="@+id/plugin_inputtextfieldview_pager_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/plugin_inputtextfieldview_layout_height"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <include
+            android:id="@+id/plugin_inputtextfieldview_emojicons_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/plugin_inputtextfieldview_emojicons_layout"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

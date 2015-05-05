@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="plugin_inputtextfieldview_input_layout_height">50dip</dimen>
+    <dimen name="plugin_inputtextfieldview_layout_height">250dip</dimen>
+    <dimen name="plugin_inputtextfieldview_emojicons_column_width">50dip</dimen>
+    <dimen name="plugin_inputtextfieldview_pager_indicator_width">6dip</dimen>
+    <dimen name="plugin_inputtextfieldview_pager_indicator_left">3dip</dimen>
+    <dimen name="plugin_inputtextfieldview_pager_indicator_top">12dip</dimen>
+</resources>

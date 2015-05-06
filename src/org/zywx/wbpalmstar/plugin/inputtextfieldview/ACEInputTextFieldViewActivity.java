@@ -23,10 +23,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.util.Xml;
@@ -46,7 +44,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class ACEInputTextFieldViewActivity extends FragmentActivity implements
-		OnPageChangeListener, TextWatcher, OnClickListener {
+		OnPageChangeListener, OnClickListener {
 
 	private String TAG = "ACEInputTextFieldViewActivity";
 	private EUExInputTextFieldView mUexBaseObj;
@@ -92,7 +90,6 @@ public class ACEInputTextFieldViewActivity extends FragmentActivity implements
 		mBtnEmojicon = (ImageButton) findViewById(CRes.plugin_inputtextfieldview_btn_emojicon);
 		mBtnEmojicon.setOnClickListener(this);
 		mEditText = (EditText) findViewById(CRes.plugin_inputtextfieldview_edit_input);
-		mEditText.addTextChangedListener(this);
 		mEditText.setOnClickListener(this);
 		if (intent
 				.hasExtra(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_EXTRA_EMOJICONS_PLACEHOLD)) {
@@ -409,21 +406,6 @@ public class ACEInputTextFieldViewActivity extends FragmentActivity implements
 			mEmojiconsPageIndex = index;
 			updateCurrentPage(index, mEmojiconsIndicator);
 		}
-	}
-
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-	}
-
-	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		mBtnSend.setVisibility(mEditText.getText().length() != 0 ? View.VISIBLE
-				: View.GONE);
-	}
-
-	@Override
-	public void afterTextChanged(Editable s) {
 	}
 
 	/**

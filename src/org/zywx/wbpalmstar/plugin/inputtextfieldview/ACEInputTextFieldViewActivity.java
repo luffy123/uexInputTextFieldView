@@ -100,6 +100,16 @@ public class ACEInputTextFieldViewActivity extends FragmentActivity implements
 
 		mBtnSend = (Button) findViewById(CRes.plugin_inputtextfieldview_btn_send);
 		mBtnSend.setOnClickListener(this);
+        if (intent.hasExtra(EInputTextFieldViewUtils
+                .INPUTTEXTFIELDVIEW_EXTRA_EMOJICONS_BTN_COLOR)) {
+            mBtnSend.setBackgroundColor(Color.parseColor(intent.getStringExtra(
+                            EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_EXTRA_EMOJICONS_BTN_COLOR).trim()));
+        }
+        if (intent.hasExtra(EInputTextFieldViewUtils
+                .INPUTTEXTFIELDVIEW_EXTRA_EMOJICONS_BTN_TEXT_COLOR)) {
+            mBtnSend.setTextColor(Color.parseColor(intent.getStringExtra(
+                    EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_EXTRA_EMOJICONS_BTN_TEXT_COLOR).trim()));
+        }
 
 		mInputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		initEmojicons();

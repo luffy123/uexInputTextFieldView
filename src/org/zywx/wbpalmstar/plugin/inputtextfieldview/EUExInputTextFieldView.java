@@ -118,6 +118,20 @@ public class EUExInputTextFieldView extends EUExBase implements Parcelable {
 						EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_EXTRA_EMOJICONS_PLACEHOLD,
 						placehold);
 			}
+			if (json.has(EInputTextFieldViewUtils
+			        .INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR)) {
+			    intent.putExtra(
+			            EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_EXTRA_EMOJICONS_BTN_COLOR,
+			            json.getString(EInputTextFieldViewUtils.
+			                    INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR));
+			}
+			if (json.has(EInputTextFieldViewUtils
+			        .INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_COLOR)) {
+			    intent.putExtra(
+			            EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_EXTRA_EMOJICONS_BTN_TEXT_COLOR,
+			            json.getString(EInputTextFieldViewUtils.
+			                    INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_COLOR));
+			}
 			Window window = mgr.startActivity(activityId, intent);
 			View decorView = window.getDecorView();
 			DisplayMetrics dm = mContext.getResources().getDisplayMetrics();

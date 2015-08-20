@@ -1,13 +1,5 @@
 package org.zywx.wbpalmstar.plugin.inputtextfieldview;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
-import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-import org.zywx.wbpalmstar.base.BUtility;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -29,6 +21,7 @@ import android.text.style.ImageSpan;
 import android.util.Log;
 import android.util.Xml;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -42,6 +35,14 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
+import org.zywx.wbpalmstar.base.BUtility;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 public class ACEInputTextFieldViewActivity extends FragmentActivity implements
 		OnPageChangeListener, OnClickListener {
@@ -91,6 +92,14 @@ public class ACEInputTextFieldViewActivity extends FragmentActivity implements
 		mBtnEmojicon.setOnClickListener(this);
 		mEditText = (EditText) findViewById(CRes.plugin_inputtextfieldview_edit_input);
 		mEditText.setOnClickListener(this);
+        mEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mEditText.requestFocus();
+                mEditText.setCursorVisible(true);
+                return false;
+            }
+        });
 		if (intent
 				.hasExtra(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_EXTRA_EMOJICONS_PLACEHOLD)) {
 			String hint = intent
@@ -433,14 +442,6 @@ public class ACEInputTextFieldViewActivity extends FragmentActivity implements
 						int heightDifference = screenHeight - (r.bottom);
 						if (heightDifference > 100) {
 							isKeyBoardVisible = true;
-							if (!mEditText.isFocused()) {
-								new Handler().postDelayed(new Runnable() {
-									@Override
-									public void run() {
-										mEditText.requestFocus();
-									}
-								}, 100);
-							}
 						} else {
 							isKeyBoardVisible = false;
 						}
@@ -512,7 +513,9 @@ public class ACEInputTextFieldViewActivity extends FragmentActivity implements
 	public void outOfViewTouch() {
 		if (isKeyBoardVisible) {
 			mInputManager.toggleSoftInputFromWindow(mEditText.getWindowToken(),
-					InputMethodManager.SHOW_FORCED, 0);
+                    InputMethodManager.SHOW_FORCED, 0);
+            mEditText.clearFocus();
+            mEditText.setCursorVisible(false);
 		}
 		if (mPagerLayout.isShown()) {
 			mPagerLayout.setVisibility(View.GONE);

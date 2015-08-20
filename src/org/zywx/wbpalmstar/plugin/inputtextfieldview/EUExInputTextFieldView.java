@@ -1,9 +1,5 @@
 package org.zywx.wbpalmstar.plugin.inputtextfieldview;
 
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.engine.EBrowserView;
-import org.zywx.wbpalmstar.engine.universalex.EUExBase;
-
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.app.LocalActivityManager;
@@ -17,10 +13,14 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 
 public class EUExInputTextFieldView extends EUExBase implements Parcelable {
 

@@ -471,13 +471,13 @@ public class ACEInputTextFieldViewActivity extends FragmentActivity implements
 						InputMethodManager.SHOW_FORCED, 0);
 			}
 			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					mPagerLayout.setVisibility(View.VISIBLE);
-					mEmojiconsLayout.setVisibility(View.VISIBLE);
-					mEditText.requestFocus();
-				}
-			}, 200);
+                @Override
+                public void run() {
+                    mPagerLayout.setVisibility(View.VISIBLE);
+                    mEmojiconsLayout.setVisibility(View.VISIBLE);
+                    mEditText.requestFocus();
+                }
+            }, 200);
 		} else {
 			if (!isKeyBoardVisible) {
 				mInputManager.toggleSoftInputFromWindow(
@@ -521,4 +521,12 @@ public class ACEInputTextFieldViewActivity extends FragmentActivity implements
 			mPagerLayout.setVisibility(View.GONE);
 		}
 	}
+
+    public void setInputFocused(){
+        mEditText.setFocusable(true);
+        mEditText.setFocusableInTouchMode(true);
+        mEditText.clearFocus();
+        mEditText.requestFocus();
+        mInputManager.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+    }
 }

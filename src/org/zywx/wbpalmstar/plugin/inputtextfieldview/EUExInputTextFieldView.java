@@ -29,6 +29,8 @@ public class EUExInputTextFieldView extends EUExBase implements Parcelable {
 
 	public static final int INPUTTEXTFIELDVIEW_MSG_OPEN = 0;
 	public static final int INPUTTEXTFIELDVIEW_MSG_CLOSE = 1;
+    private static final String BUNDLE_DATA = "data";
+    private static final int MSG_SET_INPUT_FOCUSED = 2;
 	private static LocalActivityManager mgr;
 
 	public EUExInputTextFieldView(Context context, EBrowserView view) {
@@ -49,13 +51,48 @@ public class EUExInputTextFieldView extends EUExBase implements Parcelable {
 		mHandler.sendMessage(msg);
 	}
 
+    public void setInputFocused(String[] params) {
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_SET_INPUT_FOCUSED;
+        Bundle bd = new Bundle();
+        bd.putStringArray(BUNDLE_DATA, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    private void setInputFocusedMsg() {
+        String activityId = INPUTTEXTFIELDVIEW_ACTIVITY_ID
+                + EUExInputTextFieldView.this.hashCode();
+        Activity activity = mgr.getActivity(activityId);
+
+        if (activity != null
+                && activity instanceof ACEInputTextFieldViewActivity) {
+            ACEInputTextFieldViewActivity iActivity = ((ACEInputTextFieldViewActivity) activity);
+            iActivity.setInputFocused();
+        }
+    }
+
 	@Override
-	public void onHandleMessage(Message msg) {
-		if (msg.what == INPUTTEXTFIELDVIEW_MSG_OPEN) {
-			handleOpen(msg);
-		} else {
-			handleMessageInputTextFieldView(msg);
-		}
+	public void onHandleMessage(Message message) {
+        if(message == null){
+            return;
+        }
+        Bundle bundle=message.getData();
+        switch (message.what) {
+
+            case INPUTTEXTFIELDVIEW_MSG_OPEN:
+                handleOpen(message);
+                break;
+            case INPUTTEXTFIELDVIEW_MSG_CLOSE:
+                handleMessageInputTextFieldView(message);
+                break;
+            case MSG_SET_INPUT_FOCUSED:
+                setInputFocusedMsg();
+                break;
+            default:
+                super.onHandleMessage(message);
+        }
 	}
 
 	private void handleMessageInputTextFieldView(Message msg) {

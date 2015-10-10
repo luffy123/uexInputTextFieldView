@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexInputTextFieldView" version="3.0.8" build="8">
-        <info>8.修改EditText和webview中的输入框抢焦点的问题</info>
+        uexName="uexInputTextFieldView" version="3.0.9" build="9">
+        <info>9.增加自动获取焦点接口</info>
+        <build>8.修改EditText和webview中的输入框抢焦点的问题</build>
         <build>7:1.修改open接口，可设置发送按钮颜色和按钮字体的颜色。
                 2.去掉open传入的按钮颜色和字体颜色首尾的空格。</build>
         <build>6:修改发送按钮为默认显示</build>

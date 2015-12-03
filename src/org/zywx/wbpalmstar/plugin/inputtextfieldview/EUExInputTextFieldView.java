@@ -96,6 +96,7 @@ public class EUExInputTextFieldView extends EUExBase{
     private void handleClose() {
         if (inputTextFieldViewFragment != null){
             removeFragmentFromWindow(inputTextFieldViewFragment);
+            inputTextFieldViewFragment.onDestroy();
             inputTextFieldViewFragment = null;
         }
     }

@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexInputTextFieldView" version="3.0.10" build="10">
-        <info>10.去掉插件中的ActivityGroup,配合引擎升级</info>
+        uexName="uexInputTextFieldView" version="3.2.11" build="11">
+        <info>11.修复关闭输入框时,键盘未自动收起的问题</info>
+        <build>10.去掉插件中的ActivityGroup,配合引擎升级</build>
         <build>9.增加自动获取焦点接口</build>
         <build>8.修改EditText和webview中的输入框抢焦点的问题</build>
         <build>7:1.修改open接口，可设置发送按钮颜色和按钮字体的颜色。

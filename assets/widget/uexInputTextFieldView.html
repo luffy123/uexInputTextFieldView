@@ -34,14 +34,33 @@
     </script>
     <script type="text/javascript">
 	 	window.uexOnload = function() {
-	 		uexInputTextFieldView.onCommit = function(json){
-	 			alert("onCommit "+json);
+	 		uexInputTextFieldView.onCommit = function(jsonString){
+	 			alert("onCommit "+ jsonString);
+	 		}
+	 		uexInputTextFieldView.onCommitJson = function(jsonObj){
+	 			alert("onCommitJson " + jsonObj.emojiconsText);
+	 		}
+	 		uexInputTextFieldView.onKeyBoardShow = function(jsonString){
+	 			//alert("onKeyBoardShow "+ jsonString);
+	 			console.log("onKeyBoardShow "+ jsonString);
+	 			setTimeout(function (){window.scrollTo(0, document.body.scrollHeight);},20);
+	 		}
+	 		uexInputTextFieldView.cbGetInputBarHeight = function(jsonString){
+	 			alert("cbGetInputBarHeight " + jsonString);
 	 		}
 	 	}
 
 		function openKeyboard(){
-		    var jsonstr ='{"emojicons":"res://emojicons/emojicons.xml", "placeHold":"请输入内容"}';
-    		uexInputTextFieldView.open(jsonstr);
+			var jsonstr ={
+		        emojicons:"res://emojicons/emojicons.xml",
+		        placeHold:"请输入内容",
+		        buttonColor:"#45C01A",
+		        buttonColorDown:"#298409",
+		        buttonText:"发送",
+		        //buttonTextSize:"15.5",
+		        buttonTextColor:"#FFF"
+		    };
+    		uexInputTextFieldView.open(JSON.stringify(jsonstr));
     		//uexInputTextFieldView.setInputFocused();
 		}
 		
@@ -62,6 +81,7 @@
 			<div class="consj">
 				<input type="button" value="打开" onclick="openKeyboard();">
                 <input type="button" value="获取焦点" onclick="uexInputTextFieldView.setInputFocused();">
+                <input type="button" value="获取高度" onclick="uexInputTextFieldView.getInputBarHeight();">
 				<input type="button" value="关闭" onclick="closeKeyboard();">
 	        </div>
 	    </div>

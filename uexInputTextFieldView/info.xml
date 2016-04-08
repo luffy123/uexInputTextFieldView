@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexInputTextFieldView" version="3.2.12" build="12">
-        <info>12:修改兼容性问题,添加新的接口和回调,调整优化代码逻辑,解决键盘遮蔽问题</info>
+        uexName="uexInputTextFieldView" version="3.2.13" build="13">
+        <info>13:解决有些机型上获取屏幕宽度不对的问题</info>
+        <build>12:修改兼容性问题,添加新的接口和回调,调整优化代码逻辑,解决键盘遮蔽问题</build>
         <build>11:修复关闭输入框时,键盘未自动收起的问题</build>
         <build>10:去掉插件中的ActivityGroup,配合引擎升级</build>
         <build>9:增加自动获取焦点接口</build>

@@ -118,11 +118,8 @@ public class EUExInputTextFieldView extends EUExBase{
             JSONObject json = new JSONObject(params[0]);
             inputTextFieldView = new ACEInputTextFieldView(mContext,json,this);
 
-            DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    dm.widthPixels, RelativeLayout.LayoutParams.MATCH_PARENT);
-            //lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-            //lp.bottomMargin = json.optInt("bottom",0);
+                    RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             addView2CurrentWindow(inputTextFieldView, lp);
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,17 +2,19 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile files('libs/AppCanEngine-uexInput.jar')
 }
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "23.0.0"
+    buildToolsVersion '23.0.2'
     lintOptions {
         abortOnError false
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+
     }
     sourceSets {
         main {

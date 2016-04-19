@@ -18,15 +18,6 @@
 
 package org.zywx.wbpalmstar.plugin.inputtextfieldview;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
-import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-
 import android.animation.LayoutTransition;
 import android.animation.LayoutTransition.TransitionListener;
 import android.annotation.SuppressLint;
@@ -67,6 +58,15 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 @SuppressLint("NewApi")
 public class ACEInputTextFieldView extends LinearLayout implements
@@ -544,6 +544,10 @@ public class ACEInputTextFieldView extends LinearLayout implements
         if (id == CRes.plugin_inputtextfieldview_btn_emojicon) {
             toggleBtnEmojicon(mEmojiconsLayout.isShown() ? false : true);
         } else if (id == CRes.plugin_inputtextfieldview_btn_send) {
+            mEmojiconsLayout.setVisibility(View.GONE);
+            mPagerLayout.setVisibility(View.GONE);
+            InputMethodManager imm= (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(),0);
             toggleBtnSend();
         } else if (id == CRes.plugin_inputtextfieldview_edit_input) {
             if (mPagerLayout.isShown()) {

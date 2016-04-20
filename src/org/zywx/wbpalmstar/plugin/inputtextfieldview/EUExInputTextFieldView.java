@@ -26,7 +26,6 @@ import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;

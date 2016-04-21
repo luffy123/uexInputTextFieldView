@@ -267,9 +267,7 @@ public class ACEInputTextFieldView extends LinearLayout implements
 
 	public void onDestroy() {
 		try {
-			if (isKeyBoardVisible) {
-				mInputManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
-			}
+			outOfViewTouch();
 			mParentLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -544,10 +542,6 @@ public class ACEInputTextFieldView extends LinearLayout implements
         if (id == CRes.plugin_inputtextfieldview_btn_emojicon) {
             toggleBtnEmojicon(mEmojiconsLayout.isShown() ? false : true);
         } else if (id == CRes.plugin_inputtextfieldview_btn_send) {
-            mEmojiconsLayout.setVisibility(View.GONE);
-            mPagerLayout.setVisibility(View.GONE);
-            InputMethodManager imm= (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(),0);
             toggleBtnSend();
         } else if (id == CRes.plugin_inputtextfieldview_edit_input) {
             if (mPagerLayout.isShown()) {
@@ -722,9 +716,19 @@ public class ACEInputTextFieldView extends LinearLayout implements
 			}
 			int keyboardHeight = mPagerLayout.isShown() ? mPagerLayout.getHeight() : 0;
 			int inputHeight = isKeyBoardVisible || mPagerLayout.isShown() ? EUExUtil.dipToPixels(50) : 0;
+			int bottomPoint = ((View)mUexBaseObj.mBrwView.getParent()).getBottom();
+			int bottomMargin = mParentLayout.getHeight() - bottomPoint;
+			Log.i(TAG, "bottomMargin : " + bottomMargin + "   " + bottomPoint  + "   " + mParentLayout.getHeight() );
+			if( bottomMargin > inputHeight){
+				inputHeight = 0;
+			}
 			int screenHeight = mParentLayout.getRootView().getHeight();
 			if(mBrwViewHeight > 0 || tempHeight > screenHeight - heightDifference){
-				inputHeight = heightDifference + inputHeight;
+				if(bottomMargin + heightDifference > inputHeight){
+					inputHeight = heightDifference;
+				}else {
+					inputHeight = heightDifference + inputHeight;
+				}
 			}
 			Log.i(TAG, "Move! height:" + (tempHeight - keyboardHeight - inputHeight)
 					+ " tempHeight:" + tempHeight 

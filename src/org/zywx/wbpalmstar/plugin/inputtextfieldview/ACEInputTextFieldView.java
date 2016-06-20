@@ -70,7 +70,7 @@ import java.util.ArrayList;
 
 @SuppressLint("NewApi")
 public class ACEInputTextFieldView extends LinearLayout implements
-        OnPageChangeListener, OnClickListener,ViewTreeObserver.OnGlobalLayoutListener{
+        OnPageChangeListener, OnClickListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     private String TAG = "ACEInputTextFieldView";
     private EUExInputTextFieldView mUexBaseObj;
@@ -91,41 +91,41 @@ public class ACEInputTextFieldView extends LinearLayout implements
     private String mEmojiconswgtResXmlPath;
     private static int NUMBER_OF_EMOJICONS;
     private static int NUMBER_OF_EMOJICONS_PER_PAGE = 23;
-    
+
     private View mOutOfTouchView;
     private LayoutTransition mLayoutTransition;
     private boolean isKeyboardChange = false;
     private int keyBoardHeight = 0;
     private int mBrwViewHeight = 0;
 
-    public ACEInputTextFieldView(Context context,JSONObject params,EUExInputTextFieldView uexBaseObj) {
-    	super(context);
-    	this.setOrientation(VERTICAL);
-    	mUexBaseObj = uexBaseObj;
-    	CRes.init(getContext().getApplicationContext());
-    	mInputManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		
-		View inputLayout = LayoutInflater.from(getContext()).inflate(
-				CRes.plugin_inputtextfieldview_layout, null, false);
-		mOutOfTouchView = new View(getContext());
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
-		lp.weight = 1;
-		LayoutParams lp2 = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
-		lp2.gravity = Gravity.BOTTOM;
+    public ACEInputTextFieldView(Context context, JSONObject params, EUExInputTextFieldView uexBaseObj) {
+        super(context);
+        this.setOrientation(VERTICAL);
+        mUexBaseObj = uexBaseObj;
+        CRes.init(getContext().getApplicationContext());
+        mInputManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-		this.addView(mOutOfTouchView,lp);
-		this.addView(inputLayout,lp2);
-		
-		initView();
-		initKeyboardParams(params);
-		initEvent();
+        View inputLayout = LayoutInflater.from(getContext()).inflate(
+                CRes.plugin_inputtextfieldview_layout, null, false);
+        mOutOfTouchView = new View(getContext());
+        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
+        lp.weight = 1;
+        LayoutParams lp2 = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        lp2.gravity = Gravity.BOTTOM;
+
+        this.addView(mOutOfTouchView, lp);
+        this.addView(inputLayout, lp2);
+
+        initView();
+        initKeyboardParams(params);
+        initEvent();
 
         initPagerIndicator();
         initLayoutTransition();
     }
-    
-    private void initView(){
-    	mParentLayout = (LinearLayout) findViewById(CRes.plugin_inputtextfieldview_parent_layout);
+
+    private void initView() {
+        mParentLayout = (LinearLayout) findViewById(CRes.plugin_inputtextfieldview_parent_layout);
         mPagerLayout = (LinearLayout) findViewById(CRes.plugin_inputtextfieldview_pager_layout);
         mBtnEmojicon = (ImageButton) findViewById(CRes.plugin_inputtextfieldview_btn_emojicon);
         mEditText = (EditText) findViewById(CRes.plugin_inputtextfieldview_edit_input);
@@ -134,10 +134,10 @@ public class ACEInputTextFieldView extends LinearLayout implements
         mEmojiconsPager = (ViewPager) findViewById(CRes.plugin_inputtextfieldview_emojicons_pager);
         mEmojiconsIndicator = (LinearLayout) findViewById(CRes.plugin_inputtextfieldview_emojicons_pager_indicator);
     }
-    
-    private void initEvent(){
-    	mBtnEmojicon.setOnClickListener(this);
-    	mEditText.setOnClickListener(this);
+
+    private void initEvent() {
+        mBtnEmojicon.setOnClickListener(this);
+        mEditText.setOnClickListener(this);
         mEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -150,129 +150,129 @@ public class ACEInputTextFieldView extends LinearLayout implements
         mEmojiconsPager.setOnPageChangeListener(this);
         mOutOfTouchView.setOnTouchListener(new OnTouchListener() {
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (isKeyBoardVisible || mPagerLayout.isShown()) {
-					outOfViewTouch();
-					return true;
-				}
-				return false;
-			}
-		});
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (isKeyBoardVisible || mPagerLayout.isShown()) {
+                    outOfViewTouch();
+                    return true;
+                }
+                return false;
+            }
+        });
         mParentLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
-    
-    private void initKeyboardParams(JSONObject json){
-    	try {
-    		// EmojiconsXmlPath
-			mEmojiconswgtResXmlPath = json
-					.getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_EMOJICONS);
-			initEmojicons();
-	        mEmojiconsPager.setAdapter(new EmotjiconsPagerAdapter());
-	        // placeHold
-			if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_PLACEHOLD)) {
-				String placehold = json
-						.getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_PLACEHOLD);
-				mEditText.setHint(placehold);
-			}
-			// sendBtn text
-			if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT)) {
-				String sendBtnText = json
-						.getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT);
-				mBtnSend.setText(sendBtnText);
-			}
-			// sendBtn text size
-			if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_SIZE)) {
-				String sendBtnTextSize = json
-						.getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_SIZE);
-				try {
-					mBtnSend.setTextSize(Float.parseFloat(sendBtnTextSize));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			// sendBtn text color
-			if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_COLOR)) {
-				String btnTextColor = json
-						.getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_COLOR);
-				mBtnSend.setTextColor(BUtility.parseColor(btnTextColor));
-			}
-			// Selector need StateListDrawable
-			StateListDrawable myGrad = (StateListDrawable) mBtnSend
-					.getBackground();
-			// sendBtn color normal
-			if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR)) {
-				String btnColor = json
-						.getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR);
-				if(!TextUtils.isEmpty(btnColor)){
-					GradientDrawable drawable = (GradientDrawable) myGrad
-							.getCurrent();
-					drawable.setColor(BUtility.parseColor(btnColor));
-				}
-			}
-			// sendBtn color pressed
-			if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR_DOWN)) {
-				String sendBtnbgColorDown = json
-						.getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR_DOWN);
-				if(!TextUtils.isEmpty(sendBtnbgColorDown)){
-					mBtnSend.setPressed(true);
-					GradientDrawable drawable = (GradientDrawable) myGrad
-							.getCurrent();
-					drawable.setColor(BUtility.parseColor(sendBtnbgColorDown));
-					mBtnSend.setPressed(false);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-    
-    /**
-     * 	initLayout Animator
-     */
-	private void initLayoutTransition(){
-		if(mLayoutTransition != null){
-			return;
-		}
-		mLayoutTransition = new LayoutTransition();
-		mLayoutTransition.setAnimator(LayoutTransition.CHANGE_APPEARING,  
-				mLayoutTransition.getAnimator(LayoutTransition.CHANGE_APPEARING));
-		mLayoutTransition.setAnimator(LayoutTransition.APPEARING, null);
-		mLayoutTransition.setAnimator(LayoutTransition.DISAPPEARING, null);
-		mLayoutTransition.setAnimator(LayoutTransition.CHANGE_DISAPPEARING,	null);
-		// mLayoutTransition.getAnimator(LayoutTransition.CHANGE_DISAPPEARING));
-		mLayoutTransition.addTransitionListener(new TransitionListener() {
-			
-			@Override
-			public void startTransition(LayoutTransition transition,
-					ViewGroup container, View view, int transitionType) {
-			}
-			
-			@Override
-			public void endTransition(LayoutTransition transition, ViewGroup container,
-					View view, int transitionType) {
-				if (view.getId() == CRes.plugin_inputtextfieldview_parent_layout && transitionType == LayoutTransition.CHANGE_APPEARING ) {
-					//Parent view height change ,so input and pager show together.
-					goScroll(0);
-					jsonKeyBoardShowCallback(isKeyBoardVisible || mPagerLayout.isShown() ? 1 : 0);
-				} else if (view.getId() == CRes.plugin_inputtextfieldview_pager_layout && transitionType == LayoutTransition.DISAPPEARING) {
-					if(!isKeyBoardVisible)
-						backScroll();
-					jsonKeyBoardShowCallback(isKeyBoardVisible || mPagerLayout.isShown() ? 1 : 0);
-				}
-			}
-		});
-		mParentLayout.setLayoutTransition(mLayoutTransition);
+
+    private void initKeyboardParams(JSONObject json) {
+        try {
+            // EmojiconsXmlPath
+            mEmojiconswgtResXmlPath = json
+                    .getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_EMOJICONS);
+            initEmojicons();
+            mEmojiconsPager.setAdapter(new EmotjiconsPagerAdapter());
+            // placeHold
+            if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_PLACEHOLD)) {
+                String placehold = json
+                        .getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_PLACEHOLD);
+                mEditText.setHint(placehold);
+            }
+            // sendBtn text
+            if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT)) {
+                String sendBtnText = json
+                        .getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT);
+                mBtnSend.setText(sendBtnText);
+            }
+            // sendBtn text size
+            if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_SIZE)) {
+                String sendBtnTextSize = json
+                        .getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_SIZE);
+                try {
+                    mBtnSend.setTextSize(Float.parseFloat(sendBtnTextSize));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            // sendBtn text color
+            if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_COLOR)) {
+                String btnTextColor = json
+                        .getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_TEXT_COLOR);
+                mBtnSend.setTextColor(BUtility.parseColor(btnTextColor));
+            }
+            // Selector need StateListDrawable
+            StateListDrawable myGrad = (StateListDrawable) mBtnSend
+                    .getBackground();
+            // sendBtn color normal
+            if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR)) {
+                String btnColor = json
+                        .getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR);
+                if (!TextUtils.isEmpty(btnColor)) {
+                    GradientDrawable drawable = (GradientDrawable) myGrad
+                            .getCurrent();
+                    drawable.setColor(BUtility.parseColor(btnColor));
+                }
+            }
+            // sendBtn color pressed
+            if (json.has(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR_DOWN)) {
+                String sendBtnbgColorDown = json
+                        .getString(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_BTN_COLOR_DOWN);
+                if (!TextUtils.isEmpty(sendBtnbgColorDown)) {
+                    mBtnSend.setPressed(true);
+                    GradientDrawable drawable = (GradientDrawable) myGrad
+                            .getCurrent();
+                    drawable.setColor(BUtility.parseColor(sendBtnbgColorDown));
+                    mBtnSend.setPressed(false);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-	public void onDestroy() {
-		try {
-			outOfViewTouch();
-			mParentLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * initLayout Animator
+     */
+    private void initLayoutTransition() {
+        if (mLayoutTransition != null) {
+            return;
+        }
+        mLayoutTransition = new LayoutTransition();
+        mLayoutTransition.setAnimator(LayoutTransition.CHANGE_APPEARING,
+                mLayoutTransition.getAnimator(LayoutTransition.CHANGE_APPEARING));
+        mLayoutTransition.setAnimator(LayoutTransition.APPEARING, null);
+        mLayoutTransition.setAnimator(LayoutTransition.DISAPPEARING, null);
+        mLayoutTransition.setAnimator(LayoutTransition.CHANGE_DISAPPEARING, null);
+        // mLayoutTransition.getAnimator(LayoutTransition.CHANGE_DISAPPEARING));
+        mLayoutTransition.addTransitionListener(new TransitionListener() {
+
+            @Override
+            public void startTransition(LayoutTransition transition,
+                                        ViewGroup container, View view, int transitionType) {
+            }
+
+            @Override
+            public void endTransition(LayoutTransition transition, ViewGroup container,
+                                      View view, int transitionType) {
+                if (view.getId() == CRes.plugin_inputtextfieldview_parent_layout && transitionType == LayoutTransition.CHANGE_APPEARING) {
+                    //Parent view height change ,so input and pager show together.
+                    goScroll(0);
+                    jsonKeyBoardShowCallback(isKeyBoardVisible || mPagerLayout.isShown() ? 1 : 0);
+                } else if (view.getId() == CRes.plugin_inputtextfieldview_pager_layout && transitionType == LayoutTransition.DISAPPEARING) {
+                    if (!isKeyBoardVisible)
+                        backScroll();
+                    jsonKeyBoardShowCallback(isKeyBoardVisible || mPagerLayout.isShown() ? 1 : 0);
+                }
+            }
+        });
+        mParentLayout.setLayoutTransition(mLayoutTransition);
+    }
+
+    public void onDestroy() {
+        try {
+            outOfViewTouch();
+            mParentLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Reading all emoticons in local cache
@@ -292,22 +292,22 @@ public class ACEInputTextFieldView extends LinearLayout implements
             boolean needContinue = true;
             do {
                 tokenType = parser.next();
-				switch (tokenType) {
-				case XmlPullParser.START_TAG:
-					String localName = (parser.getName()).toLowerCase();
-					if ("emojicons".equals(localName)) {
-						mEmojiconsDeletePath = emojiconsFolder
-								+ parser.getAttributeValue(null, "delete");
-					} else if ("key".equals(localName)) {
-						mEmojiconsText.add(parser.nextText());
-					} else if ("string".equals(localName)) {
-						mEmojiconsPath.add(emojiconsFolder + parser.nextText());
-					}
-					break;
-				case XmlPullParser.END_DOCUMENT:
-					needContinue = false;
-					break;
-				}
+                switch (tokenType) {
+                    case XmlPullParser.START_TAG:
+                        String localName = (parser.getName()).toLowerCase();
+                        if ("emojicons".equals(localName)) {
+                            mEmojiconsDeletePath = emojiconsFolder
+                                    + parser.getAttributeValue(null, "delete");
+                        } else if ("key".equals(localName)) {
+                            mEmojiconsText.add(parser.nextText());
+                        } else if ("string".equals(localName)) {
+                            mEmojiconsPath.add(emojiconsFolder + parser.nextText());
+                        }
+                        break;
+                    case XmlPullParser.END_DOCUMENT:
+                        needContinue = false;
+                        break;
+                }
             } while (needContinue);
         } catch (Exception e) {
             e.printStackTrace();
@@ -351,7 +351,7 @@ public class ACEInputTextFieldView extends LinearLayout implements
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            View layout = ((Activity)getContext()).
+            View layout = ((Activity) getContext()).
                     getLayoutInflater().inflate(CRes.plugin_inputtextfieldview_emojicons_grid, null);
             int initialPosition = position * NUMBER_OF_EMOJICONS_PER_PAGE;
             ArrayList<String> emoticonsInAPage = new ArrayList<String>();
@@ -373,7 +373,7 @@ public class ACEInputTextFieldView extends LinearLayout implements
                     emoticonsInAPage);
             grid.setSelector(new ColorDrawable(Color.TRANSPARENT));
             grid.setAdapter(adapter);
-			/*if (keyBoardHeight != 0) {
+            /*if (keyBoardHeight != 0) {
 				grid.setVerticalSpacing((int) (keyBoardHeight / 25 * 2));
 				layout.setPadding(layout.getPaddingLeft(),
 						(int) (keyBoardHeight / 250 * 25),
@@ -410,7 +410,7 @@ public class ACEInputTextFieldView extends LinearLayout implements
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View layout = ((Activity)getContext()).
+            View layout = ((Activity) getContext()).
                     getLayoutInflater().inflate(
                     CRes.plugin_inputtextfieldview_emojicons_item, null);
             ImageView image = (ImageView) layout
@@ -540,7 +540,7 @@ public class ACEInputTextFieldView extends LinearLayout implements
     public void onClick(View v) {
         int id = v.getId();
         if (id == CRes.plugin_inputtextfieldview_btn_emojicon) {
-            toggleBtnEmojicon(mEmojiconsLayout.isShown() ? false : true);
+            toggleBtnEmojicon(!mEmojiconsLayout.isShown());
         } else if (id == CRes.plugin_inputtextfieldview_btn_send) {
             toggleBtnSend();
         } else if (id == CRes.plugin_inputtextfieldview_edit_input) {
@@ -553,8 +553,8 @@ public class ACEInputTextFieldView extends LinearLayout implements
     private void toggleBtnEmojicon(boolean visible) {
         if (visible) {
             if (isKeyBoardVisible) {
-            	backScroll();
-				mInputManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+                backScroll();
+                mInputManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
             }
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -576,191 +576,191 @@ public class ACEInputTextFieldView extends LinearLayout implements
     }
 
     private void toggleBtnSend() {
-    	Log.i(TAG, " toggleBtnSend mEditText " + mEditText.getText().toString());
-    	jsonSendDataCallback();
-    	jsonSendDataJsonCallback();
+        Log.i(TAG, " toggleBtnSend mEditText " + mEditText.getText().toString());
+        jsonSendDataCallback();
+        jsonSendDataJsonCallback();
         mEditText.setText(null);
     }
-    
-	private void jsonSendDataCallback() {
-		// TODO	send callback String
-		if (mUexBaseObj != null) {
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject
-						.put(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_EMOJICONS_TEXT,
-								mEditText.getText().toString());
-				String js = EUExInputTextFieldView.SCRIPT_HEADER
-						+ "if("
-						+ EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_COMMIT
-						+ "){"
-						+ EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_COMMIT
-						+ "('" + jsonObject.toString() + "');}";
-				mUexBaseObj.onCallback(js);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-    
-    private void jsonSendDataJsonCallback() {
-		// TODO send callback Json
-		if (mUexBaseObj != null) {
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject
-						.put(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_EMOJICONS_TEXT,
-								mEditText.getText().toString());
-				String js = EUExInputTextFieldView.SCRIPT_HEADER + "if("
-						+ EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_COMMIT_JSON + "){"
-						+ EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_COMMIT_JSON + "("
-						+ jsonObject.toString() + ");}";
-				mUexBaseObj.onCallback(js);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-    
-    private void jsonKeyBoardShowCallback(int status){
-    	// TODO keyboard show status callback 
-		if (mUexBaseObj != null) {
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject
-						.put(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_KEYBOARDSHOW_STATUS,
-								status);
-				String js = EUExInputTextFieldView.SCRIPT_HEADER
-						+ "if("
-						+ EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_KEYBOARD_SHOW
-						+ "){"
-						+ EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_KEYBOARD_SHOW
-						+ "('" + jsonObject.toString()
-						+ "');}";
-				mUexBaseObj.onCallback(js);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
-    public void outOfViewTouch() {
-    	backScroll();
-		if (isKeyBoardVisible) {
-			mInputManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
-			mEditText.clearFocus();
-            mEditText.setCursorVisible(false);
-		}
-		if (mPagerLayout.isShown()) {
-			mPagerLayout.setVisibility(View.GONE);
-		}
+    private void jsonSendDataCallback() {
+        // TODO	send callback String
+        if (mUexBaseObj != null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject
+                        .put(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_EMOJICONS_TEXT,
+                                mEditText.getText().toString());
+                String js = EUExInputTextFieldView.SCRIPT_HEADER
+                        + "if("
+                        + EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_COMMIT
+                        + "){"
+                        + EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_COMMIT
+                        + "('" + jsonObject.toString() + "');}";
+                mUexBaseObj.onCallback(js);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void setInputFocused(){
+    private void jsonSendDataJsonCallback() {
+        // TODO send callback Json
+        if (mUexBaseObj != null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject
+                        .put(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_EMOJICONS_TEXT,
+                                mEditText.getText().toString());
+                String js = EUExInputTextFieldView.SCRIPT_HEADER + "if("
+                        + EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_COMMIT_JSON + "){"
+                        + EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_COMMIT_JSON + "("
+                        + jsonObject.toString() + ");}";
+                mUexBaseObj.onCallback(js);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void jsonKeyBoardShowCallback(int status) {
+        // TODO keyboard show status callback
+        if (mUexBaseObj != null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject
+                        .put(EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_PARAMS_JSON_KEY_KEYBOARDSHOW_STATUS,
+                                status);
+                String js = EUExInputTextFieldView.SCRIPT_HEADER
+                        + "if("
+                        + EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_KEYBOARD_SHOW
+                        + "){"
+                        + EInputTextFieldViewUtils.INPUTTEXTFIELDVIEW_FUN_ON_KEYBOARD_SHOW
+                        + "('" + jsonObject.toString()
+                        + "');}";
+                mUexBaseObj.onCallback(js);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void outOfViewTouch() {
+        backScroll();
+        if (isKeyBoardVisible) {
+            mInputManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+            mEditText.clearFocus();
+            mEditText.setCursorVisible(false);
+        }
+        if (mPagerLayout.isShown()) {
+            mPagerLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public void setInputFocused() {
         mEditText.setFocusable(true);
         mEditText.setFocusableInTouchMode(true);
         mEditText.clearFocus();
         mEditText.requestFocus();
         mInputManager.showSoftInput(mEditText, 0);
     }
-    
+
     /**
-	 * Checking keyboard visibility
-	 */
-	@Override
-	public void onGlobalLayout() {
-		// TODO Checking keyboard visibility
-		Rect r = new Rect();
-		mParentLayout.getWindowVisibleDisplayFrame(r);
-		int screenHeight = mParentLayout.getRootView()
-				.getHeight();
-		int heightDifference = screenHeight - (r.bottom);
-		boolean isKeyBoardChange = isKeyBoardVisible;
-		if (heightDifference > 100) {
-			isKeyBoardVisible = true;
-			//弹出键盘的时候,判断下俩者有弹出状态则设置隐藏  2015-08-12
-			if(mPagerLayout.isShown()){
-				mPagerLayout.setVisibility(View.GONE);
+     * Checking keyboard visibility
+     */
+    @Override
+    public void onGlobalLayout() {
+        // TODO Checking keyboard visibility
+        Rect r = new Rect();
+        mParentLayout.getWindowVisibleDisplayFrame(r);
+        int screenHeight = mParentLayout.getRootView()
+                .getHeight();
+        int heightDifference = screenHeight - (r.bottom);
+        boolean isKeyBoardChange = isKeyBoardVisible;
+        if (heightDifference > 100) {
+            isKeyBoardVisible = true;
+            //弹出键盘的时候,判断下俩者有弹出状态则设置隐藏  2015-08-12
+            if (mPagerLayout.isShown()) {
+                mPagerLayout.setVisibility(View.GONE);
 				/*backScroll();
 				goScroll(heightDifference);*/
-			}
-			keyBoardHeight = heightDifference;
-			//changeKeyBoardHeight(heightDifference);
-		} else {
-			isKeyBoardVisible = false;
-		}
-		if (isKeyBoardVisible && !isKeyBoardChange) {
-			goScroll(heightDifference);
-		} else if (!mPagerLayout.isShown() && !isKeyBoardVisible ){
-			backScroll();
-		}
-		boolean isChange = (isKeyBoardChange != isKeyBoardVisible) ;
-		if (isChange){
-			jsonKeyBoardShowCallback(isKeyBoardVisible || mPagerLayout.isShown() ? 1 : 0);
-		}
-	}
-    
-    private void goScroll(int heightDifference) {
-		if(!isKeyboardChange){
-			Log.i(TAG, "↑");
-			isKeyboardChange = true;
-			LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mUexBaseObj.mBrwView
-					.getLayoutParams();
-			int tempHeight = lp.height;
-			lp.weight = 0;
-			if (tempHeight == LayoutParams.MATCH_PARENT) {
-				tempHeight = mUexBaseObj.mBrwView.getHeight();
-			}
-			if (mBrwViewHeight == 0) {
-				mBrwViewHeight = lp.height;
-			}
-			int keyboardHeight = mPagerLayout.isShown() ? mPagerLayout.getHeight() : 0;
-			int inputHeight = isKeyBoardVisible || mPagerLayout.isShown() ? EUExUtil.dipToPixels(50) : 0;
-			int bottomPoint = ((View)mUexBaseObj.mBrwView.getParent()).getBottom();
-			int bottomMargin = mParentLayout.getHeight() - bottomPoint;
-			Log.i(TAG, "bottomMargin : " + bottomMargin + "   " + bottomPoint  + "   " + mParentLayout.getHeight() );
-			if( bottomMargin > inputHeight){
-				inputHeight = 0;
-			}
-			int screenHeight = mParentLayout.getRootView().getHeight();
-			if(mBrwViewHeight > 0 || tempHeight > screenHeight - heightDifference){
-				if(bottomMargin + heightDifference > inputHeight){
-					inputHeight = heightDifference;
-				}else {
-					inputHeight = heightDifference + inputHeight;
-				}
-			}
-			Log.i(TAG, "Move! height:" + (tempHeight - keyboardHeight - inputHeight)
-					+ " tempHeight:" + tempHeight 
-					+ " ParentkeyboardHeight:" + keyboardHeight 
-					+ " inputHeight:" + inputHeight);
-			lp.height = tempHeight - keyboardHeight - inputHeight;
-			((ViewGroup)mUexBaseObj.mBrwView).setLayoutParams(lp);
-			((ViewGroup)mUexBaseObj.mBrwView).invalidate();
-		}
-	}
+            }
+            keyBoardHeight = heightDifference;
+            //changeKeyBoardHeight(heightDifference);
+        } else {
+            isKeyBoardVisible = false;
+        }
+        if (isKeyBoardVisible && !isKeyBoardChange) {
+            goScroll(heightDifference);
+        } else if (!mPagerLayout.isShown() && !isKeyBoardVisible) {
+            backScroll();
+        }
+        boolean isChange = (isKeyBoardChange != isKeyBoardVisible);
+        if (isChange) {
+            jsonKeyBoardShowCallback(isKeyBoardVisible || mPagerLayout.isShown() ? 1 : 0);
+        }
+    }
 
-	private void backScroll() {
-		if(isKeyboardChange){
-			Log.i(TAG, "↓");
-			isKeyboardChange = false;
-			LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mUexBaseObj.mBrwView
-					.getLayoutParams();
-			lp.height = mBrwViewHeight;
-			lp.weight = 1;
-			((ViewGroup)mUexBaseObj.mBrwView).setLayoutParams(lp);
-			((ViewGroup)mUexBaseObj.mBrwView).invalidate();
-		}
-	}
-	
-	private void changeKeyBoardHeight(int keyBoardHeight){
-		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mPagerLayout.getLayoutParams();
-		int pagerHeight = lp.height;
-		if(pagerHeight != keyBoardHeight){
-			lp.height = keyBoardHeight;
-			mPagerLayout.setLayoutParams(lp);
-			this.keyBoardHeight = keyBoardHeight;
-		}
-	}
+    private void goScroll(int heightDifference) {
+        if (!isKeyboardChange) {
+            Log.i(TAG, "↑");
+            isKeyboardChange = true;
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mUexBaseObj.mBrwView
+                    .getLayoutParams();
+            int tempHeight = lp.height;
+            lp.weight = 0;
+            if (tempHeight == LayoutParams.MATCH_PARENT) {
+                tempHeight = mUexBaseObj.mBrwView.getHeight();
+            }
+            if (mBrwViewHeight == 0) {
+                mBrwViewHeight = lp.height;
+            }
+            int keyboardHeight = mPagerLayout.isShown() ? mPagerLayout.getHeight() : 0;
+            int inputHeight = isKeyBoardVisible || mPagerLayout.isShown() ? EUExUtil.dipToPixels(50) : 0;
+            int bottomPoint = ((View) mUexBaseObj.mBrwView.getParent()).getBottom();
+            int bottomMargin = mParentLayout.getHeight() - bottomPoint;
+            Log.i(TAG, "bottomMargin : " + bottomMargin + "   " + bottomPoint + "   " + mParentLayout.getHeight());
+            if (bottomMargin > inputHeight) {
+                inputHeight = 0;
+            }
+            int screenHeight = mParentLayout.getRootView().getHeight();
+            if (mBrwViewHeight > 0 || tempHeight > screenHeight - heightDifference) {
+                if (bottomMargin + heightDifference > inputHeight) {
+                    inputHeight = heightDifference;
+                } else {
+                    inputHeight = heightDifference + inputHeight;
+                }
+            }
+            Log.i(TAG, "Move! height:" + (tempHeight - keyboardHeight - inputHeight)
+                    + " tempHeight:" + tempHeight
+                    + " ParentkeyboardHeight:" + keyboardHeight
+                    + " inputHeight:" + inputHeight);
+            lp.height = tempHeight - keyboardHeight - inputHeight;
+            ((ViewGroup) mUexBaseObj.mBrwView).setLayoutParams(lp);
+            ((ViewGroup) mUexBaseObj.mBrwView).invalidate();
+        }
+    }
+
+    private void backScroll() {
+        if (isKeyboardChange) {
+            Log.i(TAG, "↓");
+            isKeyboardChange = false;
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mUexBaseObj.mBrwView
+                    .getLayoutParams();
+            lp.height = mBrwViewHeight;
+            lp.weight = 1;
+            ((ViewGroup) mUexBaseObj.mBrwView).setLayoutParams(lp);
+            ((ViewGroup) mUexBaseObj.mBrwView).invalidate();
+        }
+    }
+
+    private void changeKeyBoardHeight(int keyBoardHeight) {
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mPagerLayout.getLayoutParams();
+        int pagerHeight = lp.height;
+        if (pagerHeight != keyBoardHeight) {
+            lp.height = keyBoardHeight;
+            mPagerLayout.setLayoutParams(lp);
+            this.keyBoardHeight = keyBoardHeight;
+        }
+    }
 
 }

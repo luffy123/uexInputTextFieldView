@@ -1,24 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexInputTextFieldView" version="4.0.0" build="16">
-        <info>16:4.0</info>
-        <build>15:修正白屏问题的解决逻辑,修复键盘遮蔽的有时候页面推动过多的问题</build>
-        <build>14:某些情况下可能出现白屏的问题</build>
-        <build>13:解决有些机型上获取屏幕宽度不对的问题</build>
-        <build>12:修改兼容性问题,添加getInputBarHeight接口以及onCommitJson和onKeyBoardShow,cbGetInputBarHeight的回调,调整优化代码逻辑,解决键盘遮蔽问题</build>
-        <build>11:修复关闭输入框时,键盘未自动收起的问题</build>
-        <build>10:去掉插件中的ActivityGroup,配合引擎升级</build>
-        <build>9:增加自动获取焦点接口</build>
-        <build>8:修改EditText和webview中的输入框抢焦点的问题</build>
-        <build>7:1.修改open接口,可设置发送按钮颜色和按钮字体的颜色.
-                2.去掉open传入的按钮颜色和字体颜色首尾的空格.</build>
-        <build>6:修改发送按钮为默认显示</build>
-        <build>5:修复点击输入框再点击物理返回键，直接退出插件问题</build>
-        <build>4:修改open接口</build>
-        <build>3:修复插件关闭时系统键盘还显示问题</build>
-        <build>2:修复第二次打开界面空指针问题</build>
-        <build>1:clean函数中调用close方法</build>
-        <build>0:InputTextFieldView插件基础版</build>
+        uexName="uexInputTextFieldView" version="4.0.0" build="0">
+        <info>0:4.0</info>
     </plugin>
 </uexplugins>
